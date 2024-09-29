@@ -40,7 +40,7 @@ function Lain (lib = {}) {
     defn: function (input, context) {
       const identifier = input[1].value
       if (context.scope[identifier]) { console.warn('Lain', `Redefining function: ${identifier}`) }
-      
+
       const fnParams = input[2].type === TYPES.string && input[3] ? input[3] : input[2]
       const fnBodyFirstIndex = input[2].type === TYPES.string && input[4] ? 4 : 3
       const fnBody = input.slice(fnBodyFirstIndex)
@@ -75,11 +75,13 @@ function Lain (lib = {}) {
     }
   }
 
+  special["lambda"] = special["λ"]
+
   const getReturnValue = function (interpretResult) {
-    //lisp returns the return value of the last executed function, 
+    //lisp returns the return value of the last executed function,
     //not a list of all results of all functions.
-    if(!interpretResult || !(interpretResult instanceof Array) || !interpretResult.length){ 
-      return interpretResult 
+    if(!interpretResult || !(interpretResult instanceof Array) || !interpretResult.length){
+      return interpretResult
     }
     return interpretResult[interpretResult.length - 1]
   }

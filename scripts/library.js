@@ -77,8 +77,97 @@ function Library (client) {
     return { r, g, b, a, hex, rgba, toString: () => { return rgba }, 0: r, 1: g, 2: b, 3: a, f: [r / 255, g / 255, b / 255, a] }
   }
 
+  this.hex = (c) => { // Returns a color object
+    const red = parseInt(c.substr(1, 2), "16");
+    const green = parseInt(c.substr(3, 2), "16");
+    const blue = parseInt(c.substr(5, 2), "16");
+    return this.color(red, green, blue);
+  }
+
   this.hsl = (h, s, l, a = 1) => { // returns a HSL color object
     return { h, s, l, a, toString: () => { return `hsla(${h},${s}%,${l}%,${a})` }, 0: h, 1: s, 2: l, 3: a, f: [h / 360, s / 100, l / 100, a] }
+  }
+
+  this["to-hsl"] = (c) => { // returns HSL color object
+    // Make r, g, and b fractions of 1
+    const r = c.r /= 255;
+    const g = c.g /= 255;
+    const b = c.b /= 255;
+
+    let cmin = Math.min(r,g,b);
+    let cmax = Math.max(r,g,b);
+    let delta = cmax - cmin;
+    let h = 0;
+    let s = 0;
+    let l = 0;
+
+    // Calculate hue
+    // No difference
+    if (delta == 0) {
+      h = 0;
+    } else if (cmax == r) {
+      h = ((g - b) / delta) % 6;
+    } else if (cmax == g) {
+      h = (b - r) / delta + 2;
+    } else {
+      h = (r - g) / delta + 4;
+    }
+
+    h = Math.round(h * 60);
+    if (h < 0) {
+      h += 360;
+    }
+
+    l = (cmax + cmin) / 2;
+
+    // Calculate saturation
+    s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+
+    // Multiply l and s by 100
+    s = +(s * 100).toFixed(1);
+    l = +(l * 100).toFixed(1);
+
+    return this.hsl(h, s, l);
+  }
+
+  this["from-hsl"] = (hsl) => {
+    // Must be fractions of 1
+    let s = hsl.s /= 100;
+    let l = hsl.l /= 100;
+    let h = hsl.h;
+
+    let c = (1 - Math.abs(2 * l - 1)) * s;
+    let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    let m = l - c/2;
+    let r = 0;
+    let g = 0;
+    let b = 0;
+
+    if (0 <= h && h < 60) {
+      r = c; g = x; b = 0;
+    } else if (60 <= h && h < 120) {
+      r = x; g = c; b = 0;
+    } else if (120 <= h && h < 180) {
+      r = 0; g = c; b = x;
+    } else if (180 <= h && h < 240) {
+      r = 0; g = x; b = c;
+    } else if (240 <= h && h < 300) {
+      r = x; g = 0; b = c;
+    } else if (300 <= h && h < 360) {
+      r = c; g = 0; b = x;
+    }
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+
+    return this.color(r, g, b);
+  }
+
+  this.similarity = (a, b) => { // Get similarity between colors. Expressed as a value between 0 and 1.
+    const rd2 = Math.pow(a.r - b.r, 2);
+    const gd2 = Math.pow(a.g - b.g, 2);
+    const bd2 = Math.pow(a.b - b.b, 2);
+    return 1 - (Math.sqrt(rd2 + gd2 + bd2) / Math.sqrt(3 * Math.pow(255, 2)));
   }
 
   // Frame
@@ -305,6 +394,10 @@ function Library (client) {
     return string.split(char)
   }
 
+  this.substr = (string, start, end) => { // Returns portion of a string.
+    return string.substr(start, end);
+  }
+
   // Math
 
   this.add = (...args) => { // Adds values.
@@ -437,7 +530,7 @@ function Library (client) {
     return args[args.length - 1]
   }
 
-  this.not = (a) => { //Negation. Returns true if a is false. Returns false if a is true. 
+  this.not = (a) => { //Negation. Returns true if a is false. Returns false if a is true.
     return !a
   }
 
@@ -530,6 +623,21 @@ function Library (client) {
       }
     }
     return arr
+  }
+
+  this.sort = (fn, items) => { // returns a new sorted list with the given comparator
+    const xs = [...items]
+    xs.sort(fn)
+    return xs
+  }
+
+  this.take = (n, items) => { // take the first n items of the list
+    const xs = items.slice(0, n)
+    return xs
+  }
+
+  this.drop = (n, items) => { // take the first n items of the list
+    return items.slice(n)
   }
 
   // Objects
