@@ -1,10 +1,12 @@
-RONIN
+Rho
 
 ---------------
 
-Ronin is a procedural graphics tool designed to automate simple graphical tasks, like resizing, cropping, coloring, and generating algorithmic images. It interprets a minimal dialect of LISP, look at the examples to better understand how this all works.
+TEMP: Rho is a fork of Ronin. At this time the functionality is almost identical. However, this fork will implement functionality that may not be function in Ronin. The primary differences will be in the availblity of some lain keywords and library functions.
 
-The library updates is constantly revealing new applications to Ronin, you can see the list of available functions here. Most of our iconography and designs were created with both Ronin and Dotgrid.
+Rho is a fork of Ronin, a procedural graphics tool designed to automate simple graphical tasks, like resizing, cropping, coloring, and generating algorithmic images. It interprets a minimal dialect of LISP, look at the examples to better understand how this all works.
+
+The library updates is constantly revealing new applications to Rho, you can see the list of available functions here.
 
 - Guide: https://100r.co/site/ronin.html
 - Video Tutorial: https://www.youtube.com/watch?v=SgAWGh1s9zg
@@ -29,30 +31,30 @@ Project  Clean            Escape
 
 Helpers
 
-Ronin helpers are keywords that facilitates adding coordinates from the canvas into your script. The currently supported helpers are $rect, $pos, $line, $circle & $arc. Holding right-click while using a $helper will run the script as the mouse is injecting coordinates into the script. Paste the following script, and trace a shape in the canvas:
+Rho helpers are keywords that facilitates adding coordinates from the canvas into your script. The currently supported helpers are $rect, $pos, $line, $circle & $arc. Holding right-click while using a $helper will run the script as the mouse is injecting coordinates into the script. Paste the following script, and trace a shape in the canvas:
 
 (fill $circle "red")
 
 Additional helpers are also available to change parts of a shape, these are as follow: $x, $y, $xy, $wh, $a & $r. Paste the following script, and change the position and radius of a circle:
 
 (clear)
-(fill 
+(fill
   (circle $xy $r) "red")
 
 Extra helpers are available for various transformations, these are as follow: $drag, $view, $poly, $move & $rotate. Paste the following script, and draw the vertices of a line, press escape to stop:
 
 (clear)
-(stroke 
+(stroke
   $poly "red")
 
 Import/Export
 
-To save an image in memory, open an image file with Ronin, or drag an image file on the window. You will then be able to import it by using the file image's name. If the image file is `preview.png`, you can import it as follow:
+To save an image in memory, open an image file with Rho, or drag an image file on the window. You will then be able to import it by using the file image's name. If the image file is `preview.png`, you can import it as follow:
 
-(import $path 
+(import $path
   (pos 100 100))
 
-(import "preview.jpg" 
+(import "preview.jpg"
   (rect 100 100 400 400))
 
 (export)
@@ -80,10 +82,17 @@ Shapes
 - (text x y p t ~a ~f) Returns a text shape.
 - (svg x y d) Returns a svg shape.
 
-Canvas operations
+Color operations
 
 - (color r g b ~a) Returns a color object.
+- (hex s) Returns a color object given a hex color code.
+- (similarity a b) Returns a values between 0 and 1 for two color objects.
+- (from-hsl c) returns a color object from an HSL color object
+- (to-hsl c) returns a HSL color object from a color object
 - (hsl h s l ~a) returns a HSL color object
+
+Canvas operations
+
 - (resize ~w) Resizes the canvas to target w and h, returns the rect.
 - (rescale ~w ~h) Rescales the canvas to target ratio of w and h, returns the rect.
 - (crop ~rect) Crop canvas to rect.
@@ -103,7 +112,7 @@ Canvas operations
 
 Pixel operations
 
-- (pixels fn ~q ~rect) 
+- (pixels fn ~q ~rect)
 - (saturation pixel q) Change the saturation of pixels.
 - (contrast pixel q) Change the contrast of pixels.
 - (brightness pixel q) Change the brightness of pixels.
@@ -116,6 +125,7 @@ Strings
 
 - (concat ...items) Concat multiple strings.
 - (split string char) Split string at character.
+- (substr string start end) Returns a portion of the string.
 
 Math
 
@@ -127,21 +137,21 @@ Math
 - (rad degrees) Convert radians to degrees.
 - (deg radians) Convert degrees to radians.
 - (clamp val min max) Clamps a value between min and max.
-- (step val step) 
+- (step val step)
 - (min) Returns lowest value.
 - (max) Returns highest value.
 - (ceil) Rounds up to the nearest integer.
 - (floor) Rounds down to the nearest integer.
 - (round) Rounds to the nearest integer
-- (sin) 
-- (cos) 
-- (log) 
-- (pow) 
+- (sin)
+- (cos)
+- (log)
+- (pow)
 - (sqrt) Calculate the square root.
 - (sq a) Calculate the square.
-- (PI) 
-- (TWO_PI) 
-- (random ...args) 
+- (PI)
+- (TWO_PI)
+- (random ...args)
 
 Logic
 
@@ -150,14 +160,16 @@ Logic
 - (eq a b) Returns true if a is equal to b, else false.
 - (and ...args) Returns true if all conditions are true.
 - (or a b ...rest) Returns true if at least one condition is true.
-- (not a) Negation. Returns true if a is false. Returns false if a is true. 
+- (not a) Negation. Returns true if a is false. Returns false if a is true.
 - (while fn action) While loop. Execute action for as long as fn is true.
 
 Language
-- (let name value)
+
+- (let (...(name value)) instruction)
 - (def name value)
 - (defn fname ~(...fnparams) ...instructions)
 - (λ (...args) ...instructions)
+- (lambda (...args) ...instructions)
 - (if (condition) ...instruction-when-true ~...instruction-when-false)
 
 Lists
@@ -165,7 +177,10 @@ Lists
 - (each arr fn) Run a function for each element in a list.
 - (map arr fn) Run a function on each element in a list.
 - (filter arr fn) Remove from list, when function returns false.
-- (reduce arr fn acc) 
+- (sort arr fn) Sort a list using the provided comparator function.
+- (take arr n) Takes first n elements from list, returns a new list.
+- (drop arr n) Drop n elements from list, returns a new list.
+- (reduce arr fn acc)
 - (len item) Returns the length of a list.
 - (cons arr ...items) Returns a new array with the items appended.
 - (push arr ...items) Appends the items into the existing list.
@@ -205,7 +220,7 @@ Utilities
 - (on event f) Triggers on event.
 - (test name a b) Unit test. Checks if a is equal to b, logs results to console.
 - (benchmark fn) Logs time taken to execute a function.
-- (get-theme) Returns an object with current theme colors. 
+- (get-theme) Returns an object with current theme colors.
 - (get-frame) Returns a shape object describing the current canvas.
 
 Extras
@@ -216,5 +231,4 @@ Extras
 
 Licenses
 
-Ronin's source code is licensed under MIT and the images, text and assets are licensed under BY-NC-SA 4.0. View individual licenses for details.
-
+Rho's and Ronin's source code is licensed under MIT and the images, text and assets are licensed under BY-NC-SA 4.0. View individual licenses for details.

@@ -35,7 +35,7 @@ fs.writeFileSync('index.html', cleanup(`
       ${scripts.reduce((acc, item) => { return `${acc}// Including Script ${item}\n\n${fs.readFileSync('./scripts/' + item, 'utf8')}\n` }, '')}
       const client = new Client()
       client.install(document.body)
-      window.addEventListener('load', () => { 
+      window.addEventListener('load', () => {
         client.start()
       })
     </script>
@@ -63,7 +63,7 @@ fs.writeFileSync('debug.html', `
     <script>
       const client = new Client()
       client.install(document.body)
-      window.addEventListener('load', () => { 
+      window.addEventListener('load', () => {
         client.start()
       })
     </script>

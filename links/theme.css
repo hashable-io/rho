@@ -7,4 +7,4 @@ body { background:var(--background);  }
 #ronin #wrapper #commander #status #eval { background-color: var(--b_inv); border-color: var(--b_inv) }
 #ronin #wrapper #commander #status #eval.active { background:var(--f_high); border-color:var(--f_high); transition: none }
 
-::selection { background-color:var(--b_inv); color:var(--f_inv); text-decoration:none } 
+::selection { background-color:var(--b_inv); color:var(--f_inv); text-decoration:none }
