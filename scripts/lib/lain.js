@@ -21,7 +21,7 @@ function Lain (lib = {}) {
   const special = {
     let: function (input, context) {
       const letContext = input[1].reduce(function (acc, x) {
-        acc.scope[x[0].value] = interpret(x[1], context)
+        acc.scope[x[0].value] = interpret(x[1], acc)
         return acc
       }, new Context({}, context))
       return interpret(input[2], letContext)
