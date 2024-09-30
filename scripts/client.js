@@ -42,7 +42,7 @@ function Client () {
 
     this.acels.set('∷', 'Toggle Menubar', 'Tab', () => { this.acels.toggle() })
     this.acels.set('∷', 'Open Theme', 'CmdOrCtrl+Shift+O', () => { this.theme.open() })
-    this.acels.set('∷', 'Reset Theme', 'CmdOrCtrl+Backspace', () => { this.theme.reset() })
+    this.acels.set('∷', 'Reset Theme', 'CmdOrCtrl+Shift+P', () => { this.theme.reset() })
     this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new(); this.surface.clear(); this.commander.clear() })
     this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('ronin', 'lisp', this.commander._input.value, 'text/plain') })
     this.acels.set('File', 'Export Image', 'CmdOrCtrl+E', () => { this.source.write('ronin', 'png', this.surface.el.toDataURL('image/png', 1.0), 'image/png') })
@@ -53,7 +53,7 @@ function Client () {
     this.acels.set('Project', 'Eval', 'CmdOrCtrl+Enter', () => { this.commander.eval() })
     this.acels.set('Project', 'Eval Selection', 'Alt+Enter', () => { this.commander.evalSelection() })
     this.acels.set('Project', 'Re-Indent', 'CmdOrCtrl+Shift+I', () => { this.commander.lint() })
-    this.acels.set('Project', 'Clean', 'Escape', () => { this.commander.cleanup() })
+    //this.acels.set('Project', 'Clean', 'Escape', () => { this.commander.cleanup() })
     this.acels.route(this)
   }
 
