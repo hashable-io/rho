@@ -563,6 +563,15 @@ function Library (client) {
     return arr.map(fn);
   }
 
+  this.zip = (arr1, arr2) => { // Returns a new list with fn applied to each value.
+    const min = Math.min(arr1.length, arr2.length);
+    const result = [];
+    for (let i = 0; i < min; i++) {
+      result.push([arr1[i], arr2[i]]);
+    }
+    return result;
+  }
+
   this.filter = (arr, fn) => { // Returns a new list, without values evaluated to false by fn.
     return arr.filter(fn);
   }
