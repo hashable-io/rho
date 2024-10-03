@@ -234,16 +234,16 @@ function Commander (client) {
 
   // Splash
 
-  this.splash = `; Ronin v2.50
+  this.splash = `; Rho v1.0-alpha
 
-(def logo-path "M60,60 L195,60 A45,45 0 0,1 240,105 A45,45 0 0,1 195,150 L60,150 M195,150 A45,45 0 0,1 240,195 L240,240 ")
+(def logo-path "M60,360 L60,360 L60,180 Q60,60 180,60 Q300,60 300,180 M180,300 Q300,300 300,180 M180,300 L180,300 L90,300 M60,360 L60,360 L60,420 ")
 
 (clear)
 
 (resize 600 600)
 
 (stroke
-  (svg 140 140 logo-path) "black" 7)`
+  (svg 100 50 logo-path) "#336699" 20)`
 }
 
 function lintLISP (str) {
