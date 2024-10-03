@@ -84,6 +84,70 @@ function Library (client) {
     return this.color(red, green, blue);
   }
 
+  this["to-xyz"] = (...args) => {
+    let r = args[0];
+    let g = args[1];
+    let b = args[2];
+    if (args.length == 1) {
+      // Reading from a single rgb color
+      r = args[0].r
+      g = args[0].g
+      b = args[0].b
+    }
+    // Convert RGB (0-255) to sRGB (0-1)
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
+
+    // Apply gamma correction
+    r = (r > 0.04045) ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
+    g = (g > 0.04045) ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
+    b = (b > 0.04045) ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
+
+    // Convert to XYZ using the D65 illuminant (sRGB to XYZ conversion matrix)
+    const x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
+    const y = r * 0.2126729 + g * 0.7151522 + b * 0.0721750;
+    const z = r * 0.0193339 + g * 0.1191920 + b * 0.9503041;
+
+    return { x, y, z };
+  }
+
+  this["to-lab"] = (...args) => {
+    let x = args[0];
+    let y = args[1];
+    let z = args[2];
+    if (args.length == 1) {
+      // We have  an XYZ color object.
+      x = args[0].x;
+      y = args[0].y;
+      z = args[0].z;
+    }
+     // Reference white (D65)
+     const refX = 0.95047;
+     const refY = 1.00000;
+     const refZ = 1.08883;
+     x = x / refX;
+     y = y / refY;
+     z = z / refZ;
+
+     // Apply the LAB formula
+     x = (x > 0.008856) ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+     y = (y > 0.008856) ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+     z = (z > 0.008856) ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+
+     const l = (116 * y) - 16;
+     const a = 500 * (x - y);
+     const b = 200 * (y - z);
+     return { l, a, b }
+  }
+
+  this["delta-e"] = (l1, l2) => {
+    const deltaL = l1.l - l2.l;
+    const deltaA = l1.a - l2.a;
+    const deltaB = l1.b - l2.b;
+    return Math.sqrt(Math.pow(deltaL, 2) + Math.pow(deltaA, 2) + Math.pow(deltaB, 2));
+  }
+
   this.hsl = (h, s, l, a = 1) => { // returns a HSL color object
     return { h, s, l, a, toString: () => { return `hsla(${h},${s}%,${l}%,${a})` }, 0: h, 1: s, 2: l, 3: a, f: [h / 360, s / 100, l / 100, a] }
   }
